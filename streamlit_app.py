@@ -1,33 +1,7 @@
-'''import streamlit as st
-
-st.title("🎈 My new Streamlit app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
-'''
-
-
-"""
-streamlit_app.py
-=================
-Application Streamlit d'analyse de données d'eye-tracking (V1).
-
-L'application analyse UN fichier de données à la fois : un seul
-participant, une seule image, une seule séquence d'enregistrement.
-
-Structure du projet :
-    streamlit_app.py    -> ce fichier : orchestration de l'interface
-    utils/data.py        -> lecture des données, validité, point binoculaire
-    utils/fixations.py   -> détection des fixations (I-DT)
-    utils/heatmap.py     -> construction de la heatmap gaussienne
-    utils/plotting.py    -> construction de la figure Plotly
-    assets/images/       -> les 6 images expérimentales (REF1.jpg, ...)
-"""
-
 from __future__ import annotations
-
 import numpy as np
 import streamlit as st
+
 
 from utils.data import (
     EYE_MODE_BINOCULAR,
@@ -255,7 +229,7 @@ f4.metric("TTFF global", "N/A" if ttff_global is None else f"{ttff_global:.0f} m
 
 if not fixations_df.empty:
     with st.expander("Détail des fixations (tableau)"):
-        st.dataframe(fixations_df, use_container_width=True, hide_index=True)
+        st.dataframe(fixations_df, width='stretch', hide_index=True)
 
 st.divider()
 
@@ -368,7 +342,7 @@ if show_scanpath:
 if show_fixations:
     add_fixation_trace(fig, fixations_df)
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width='stretch')
 
 
 

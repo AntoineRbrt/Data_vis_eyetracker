@@ -73,7 +73,8 @@ def create_base_figure(image_array: np.ndarray) -> go.Figure:
     # tableau correspond exactement à la coordonnée X = j, et la ligne i
     # correspond exactement à la coordonnée Y = i : aucune conversion
     # supplémentaire n'est nécessaire.
-    fig.add_trace(go.Image(z=image_array, name="Image expérimentale", hoverinfo="skip"))
+    
+    #fig.add_trace(go.Image(z=image_array, name="Image expérimentale", hoverinfo="skip"))
 
     fig.update_xaxes(
         range=[0, IMAGE_WIDTH],
