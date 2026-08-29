@@ -1,8 +1,8 @@
-# Analyse eye-tracking — V1
+# Data analysis eye-tracking — V1
 
-## Où placer vos images
+## Images
 
-Placez vos 6 images expérimentales (3840×2160 px) exactement ici, avec ces noms :
+Placer les 6 images expérimentales (3840×2160 px) ici, avec ces noms :
 
 ```
 assets/images/REF1.png
@@ -22,7 +22,7 @@ streamlit run streamlit_app.py
 
 ## Déployer / mettre à jour sur Streamlit Community Cloud
 
-1. Poussez ce dossier (avec les images dans `assets/images/`) sur votre dépôt GitHub :
+1. Pousser ce dossier (avec les images dans `assets/images/`) sur le dépôt GitHub :
    ```bash
    git add .
    git commit -m "V1 de l'application d'analyse eye-tracking"
