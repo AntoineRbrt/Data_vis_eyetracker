@@ -80,13 +80,13 @@ def load_experimental_image(code: str) -> tuple[np.ndarray | None, str | None]:
     car c'est le format attendu par le trace Plotly go.Image utilisé dans
     utils/plotting.py.
     """
-    image_path = IMAGES_DIR / f"{code}.png"
+    image_path = IMAGES_DIR / f"{code}.jpg"
 
     if not image_path.exists():
         return None, (
             f"L'image de référence pour le code '{code}' est introuvable "
             f"({image_path}). Vérifiez qu'elle a bien été placée dans "
-            f"assets/images/ sous le nom '{code}.png'."
+            f"assets/images/ sous le nom '{code}.jpg'."
         )
 
     image = Image.open(image_path).convert("RGB")
@@ -98,7 +98,7 @@ def load_experimental_image(code: str) -> tuple[np.ndarray | None, str | None]:
     # de regard.
     if image.size != (IMAGE_WIDTH, IMAGE_HEIGHT):
         st.warning(
-            f"L'image '{code}.png' fait {image.size[0]}x{image.size[1]} px "
+            f"L'image '{code}.jpg' fait {image.size[0]}x{image.size[1]} px "
             f"au lieu de {IMAGE_WIDTH}x{IMAGE_HEIGHT} px attendus. "
             "La correspondance entre les coordonnées de regard et les "
             "pixels de l'image risque d'être incorrecte."
