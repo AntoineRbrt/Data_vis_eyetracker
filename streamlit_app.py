@@ -77,7 +77,7 @@ if image_code is None or image_code not in VALID_IMAGE_CODES:
     )
     st.stop()
 
-image_array, image_error = load_experimental_image(image_code)
+image_array, image_error = load_experimental_image(image_code, display_downscale=4)
 if image_error is not None:
     st.error(image_error)
     st.stop()

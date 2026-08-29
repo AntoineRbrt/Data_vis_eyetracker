@@ -68,17 +68,14 @@ def extract_image_code(filename: str) -> str | None:
     return match.group(1)
 
 
-def load_experimental_image(code: str) -> tuple[np.ndarray | None, str | None]:
+@st.cache_data(show_spinner=False)
+
+def load_experimental_image(code: str, display_downscale: int = 1) -> tuple[np.ndarray | None, str | None]:
     """
     Charge l'image expérimentale correspondant au code donné.
 
-    Retourne un tuple (image_array, message_erreur).
-    - Si tout va bien : (tableau numpy RGB, None)
-    - En cas de problème : (None, "message d'erreur explicite")
-
-    L'image est retournée sous forme de tableau numpy (hauteur, largeur, 3)
-    car c'est le format attendu par le trace Plotly go.Image utilisé dans
-    utils/plotting.py.
+    display_downscale = 1  -> image native 3840x2160
+    display_downscale = 4  -> image affichée en 960x540
     """
     image_path = IMAGES_DIR / f"{code}.jpg"
 
@@ -86,23 +83,22 @@ def load_experimental_image(code: str) -> tuple[np.ndarray | None, str | None]:
         return None, (
             f"L'image de référence pour le code '{code}' est introuvable "
             f"({image_path}). Vérifiez qu'elle a bien été placée dans "
-            f"assets/images/ sous le nom '{code}.jpg'."
+            f"assets/images/ sous le nom '{code}.png'."
         )
 
     image = Image.open(image_path).convert("RGB")
 
-    # Vérification de cohérence : on s'attend à une image 3840x2160.
-    # On ne bloque pas l'application si ce n'est pas le cas (cela pourrait
-    # arriver avec une image de test), mais on prévient l'utilisateur car
-    # cela casserait la correspondance pixel-à-pixel avec les coordonnées
-    # de regard.
     if image.size != (IMAGE_WIDTH, IMAGE_HEIGHT):
         st.warning(
-            f"L'image '{code}.jpg' fait {image.size[0]}x{image.size[1]} px "
+            f"L'image '{code}.png' fait {image.size[0]}x{image.size[1]} px "
             f"au lieu de {IMAGE_WIDTH}x{IMAGE_HEIGHT} px attendus. "
             "La correspondance entre les coordonnées de regard et les "
             "pixels de l'image risque d'être incorrecte."
         )
+
+    if display_downscale > 1:
+        new_size = (IMAGE_WIDTH // display_downscale, IMAGE_HEIGHT // display_downscale)
+        image = image.resize(new_size, Image.Resampling.LANCZOS)
 
     return np.array(image), None
 

@@ -57,24 +57,30 @@ SCANPATH_NUMBERING_WARNING_THRESHOLD = 500
 
 def create_base_figure(image_array: np.ndarray) -> go.Figure:
     """
-    Crée la figure Plotly de base : uniquement l'image expérimentale,
-    avec un système d'axes qui garantit :
-    - une correspondance pixel-à-pixel exacte avec les coordonnées de
-      l'eye-tracker (aucune mise à l'échelle) ;
-    - un rapport largeur/hauteur fixe, donc aucune déformation visuelle
-      (xaxis.scaleanchor="y", scaleratio=1 : un pixel en X occupe toujours
-      la même taille à l'écran qu'un pixel en Y) ;
-    - une orientation verticale correcte (voir docstring du module).
+    Crée la figure Plotly de base : image expérimentale + repère correct.
+    L'image peut être affichée dans une résolution réduite, mais elle est
+    étirée dans le repère 3840x2160 pour conserver l'alignement exact avec
+    les coordonnées de regard.
     """
     fig = go.Figure()
 
-    # go.Image attend un tableau (hauteur, largeur, canaux). Avec les
-    # réglages par défaut (x0=0, y0=0, dx=1, dy=1), la colonne j du
-    # tableau correspond exactement à la coordonnée X = j, et la ligne i
-    # correspond exactement à la coordonnée Y = i : aucune conversion
-    # supplémentaire n'est nécessaire.
-    
-    #fig.add_trace(go.Image(z=image_array, name="Image expérimentale", hoverinfo="skip"))
+    img_h, img_w = image_array.shape[:2]
+
+    # Facteurs d'échelle entre l'image affichée et le repère natif
+    dx = IMAGE_WIDTH / img_w
+    dy = IMAGE_HEIGHT / img_h
+
+    fig.add_trace(
+        go.Image(
+            z=image_array,
+            name="Image expérimentale",
+            hoverinfo="skip",
+            x0=0,
+            y0=0,
+            dx=dx,
+            dy=dy,
+        )
+    )
 
     fig.update_xaxes(
         range=[0, IMAGE_WIDTH],
@@ -86,7 +92,7 @@ def create_base_figure(image_array: np.ndarray) -> go.Figure:
         visible=False,
         scaleanchor="x",
         scaleratio=1,
-        autorange="reversed",  # affichage uniquement, voir docstring du module
+        autorange="reversed",
     )
     fig.update_layout(
         margin=dict(l=0, r=0, t=10, b=0),
